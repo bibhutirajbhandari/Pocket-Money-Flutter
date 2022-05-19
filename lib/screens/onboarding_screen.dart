@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:pocketmoney/components/constraints.dart';
+import 'package:pocketmoney/components/constants.dart';
 import 'package:pocketmoney/main.dart';
 import 'package:pocketmoney/size_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,40 +8,39 @@ import '../screens/pages.dart';
 import '../components/widgets.dart';
 
 class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({Key? key}) : super(key: key);
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  int current_page = 0;
+  int currentPage = 0;
 
-  PageController _pageController = PageController(initialPage: 0);
+  final PageController _pageController = PageController(initialPage: 0);
 
   AnimatedContainer dotIndicator(index) {
     return AnimatedContainer(
-      margin: EdgeInsets.only(right: 5),
-      duration: Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(right: 5),
+      duration: const Duration(milliseconds: 300),
       height: 10.0,
       width: 10.0,
       decoration: BoxDecoration(
-        color: current_page == index ? kSecondaryColor : kPrimaryColor,
+        color: currentPage == index ? kSecondaryColor : kPrimaryColor,
         shape: BoxShape.circle,
       ),
     );
   }
 
   Future setSeenOnBoard() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     seenOnBoard = await prefs.setBool("seenOnboard", true);
   }
 
   @override
   Widget build(BuildContext context) {
-
-      SizeConfig().init(context);
-      double sizeH = SizeConfig.blockSizeH!;
-
+    SizeConfig().init(context);
+    // double sizeH = SizeConfig.blockSizeH!;
 
     return Scaffold(
       body: SafeArea(
@@ -52,58 +51,70 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 Expanded(
                   child: PageView.builder(
-                    itemCount: onboard_data.length,
+                    itemCount: onboardData.length,
                     controller: _pageController,
                     onPageChanged: (value) {
                       setState(() {
-                        current_page = value;
+                        currentPage = value;
                       });
                     },
                     itemBuilder: (context, index) => OnboardContent(
-                        image: onboard_data[index].image,
-                        title: onboard_data[index].title,
-                        description: onboard_data[index].description),
+                        image: onboardData[index].image,
+                        title: onboardData[index].title,
+                        description: onboardData[index].description),
                   ),
                 ),
                 Expanded(
                   flex: 1,
                   child: Column(
                     children: [
-                      current_page == onboard_data.length -1 
-                      ? 
-                       MyTextButton(
-                        buttonName: 'Get Started',
-                        onPressed: ()
-                        {
-                          Navigator.push(context,MaterialPageRoute(builder: ((context) => CategoryPage()),);
-                        },
-                      )
-                     : Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          NavButton(
-                            name: 'Skip',
-                            onPressed: () {
-                             Navigator.push(context, MaterialPageRoute(builder:((context) => CategoryPage()),
-                              );
-                            },
-                          ),
-                          Row(
-                            children: List.generate(
-                              onboard_data.length,
-                              (index) => dotIndicator(index),
-                            ),
-                          ),
-                          NavButton(
-                              name: 'Next',
+                      currentPage == onboardData.length - 1
+                          ? MyTextButton(
+                              bgColor: Colors.blueAccent,
+                              buttonName: 'Get Started',
                               onPressed: () {
-                                _pageController.nextPage(
-                                  duration: Duration(microseconds: 400),
-                                  curve: Curves.easeInOut,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const CategoryPage(),
+                                  ),
                                 );
-                              })
-                        ],
-                      ),
+                              },
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                NavButton(
+                                  name: 'Skip',
+                                  onPressed: () {
+                                    //  Navigator.push(context, MaterialPageRoute(builder:((context) => CategoryPage()),
+                                    //   );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CategoryPage(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                Row(
+                                  children: List.generate(
+                                    onboardData.length,
+                                    (index) => dotIndicator(index),
+                                  ),
+                                ),
+                                NavButton(
+                                    name: 'Next',
+                                    onPressed: () {
+                                      _pageController.nextPage(
+                                        duration:
+                                            const Duration(microseconds: 400),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    })
+                              ],
+                            ),
                     ],
                   ),
                 )
@@ -116,30 +127,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-
-class onBoard {
+class OnBoard {
   final String image, title, description;
 
-  onBoard(
+  OnBoard(
       {required this.image, required this.title, required this.description});
 }
 
-final List<onBoard> onboard_data = [
-  onBoard(
+final List<OnBoard> onboardData = [
+  OnBoard(
       image: 'assets/images/management.svg',
       title: 'Say hi to your new \n budget tracker!',
       description:
           'You\'re amazing for taking this first step towards getting better control over your financial goals'),
-  onBoard(
+  OnBoard(
       image: 'assets/images/strategy1.svg',
       title: 'Map your target budget plan',
       description: 'Categorize your budget and get alerts on exceeding limits'),
-  onBoard(
+  OnBoard(
       image: 'assets/images/graph.svg',
       title: 'Graphical monitoring of your data',
       description:
           'Visualized represntation of your data to ease your money monitoring'),
-  onBoard(
+  OnBoard(
       image: 'assets/images/success.svg',
       title: 'Together we\'ll reach your financial goals',
       description:
@@ -154,7 +164,7 @@ class OnboardContent extends StatelessWidget {
     required this.description,
   }) : super(key: key);
 
-  final image, title, description;
+  final String image, title, description;
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +182,7 @@ class OnboardContent extends StatelessWidget {
               .copyWith(fontWeight: FontWeight.w500),
         ),
         const Spacer(),
-        SizedBox(height: 6.0),
+        const SizedBox(height: 6.0),
         Text(
           description,
           textAlign: TextAlign.center,
