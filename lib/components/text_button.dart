@@ -23,7 +23,13 @@ class MyTextButton extends StatelessWidget {
         width: SizeConfig.blockSizeH! * 100,
         child: TextButton(
           onPressed: () {},
-          child: Text(buttonName),
+          child: Text(
+            buttonName,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 24.0,
+            ),
+          ),
           style: TextButton.styleFrom(backgroundColor: bgColor),
         ),
       ),
