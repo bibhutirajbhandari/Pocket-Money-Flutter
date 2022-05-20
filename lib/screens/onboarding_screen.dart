@@ -39,7 +39,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    // SizeConfig().init(context);
     // double sizeH = SizeConfig.blockSizeH!;
 
     return Scaffold(
@@ -165,9 +165,13 @@ class OnboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Column(
       children: [
-        SvgPicture.asset(image, height: 300),
+        SvgPicture.asset(
+          image,
+          height: SizeConfig.screenHeight! * 0.6,
+        ),
         // const Spacer(),
         Text(
           title,
