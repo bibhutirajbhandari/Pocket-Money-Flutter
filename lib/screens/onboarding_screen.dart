@@ -39,87 +39,84 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    // SizeConfig().init(context);
     // double sizeH = SizeConfig.blockSizeH!;
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: PageView.builder(
-                    itemCount: onboardData.length,
-                    controller: _pageController,
-                    onPageChanged: (value) {
-                      setState(() {
-                        currentPage = value;
-                      });
-                    },
-                    itemBuilder: (context, index) => OnboardContent(
-                        image: onboardData[index].image,
-                        title: onboardData[index].title,
-                        description: onboardData[index].description),
-                  ),
+          child: Column(
+            children: [
+              Expanded(
+                flex: 1,
+                child: PageView.builder(
+                  itemCount: onboardData.length,
+                  controller: _pageController,
+                  onPageChanged: (value) {
+                    setState(() {
+                      currentPage = value;
+                    });
+                  },
+                  itemBuilder: (context, index) => OnboardContent(
+                      image: onboardData[index].image,
+                      title: onboardData[index].title,
+                      description: onboardData[index].description),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      currentPage == onboardData.length - 1
-                          ? MyTextButton(
-                              bgColor: Colors.blueAccent,
-                              buttonName: 'Get Started',
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const CategoryPage(),
-                                  ),
-                                );
-                              },
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                NavButton(
-                                  name: 'Skip',
-                                  onPressed: () {
-                                    //  Navigator.push(context, MaterialPageRoute(builder:((context) => CategoryPage()),
-                                    //   );
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CategoryPage(),
-                                      ),
-                                    );
-                                  },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    currentPage == onboardData.length - 1
+                        ? MyTextButton(
+                            bgColor: Colors.blueAccent,
+                            buttonName: 'Get Started',
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CategoryPage(),
                                 ),
-                                Row(
-                                  children: List.generate(
-                                    onboardData.length,
-                                    (index) => dotIndicator(index),
-                                  ),
+                              );
+                            },
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              NavButton(
+                                name: 'Skip',
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CategoryPage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              Row(
+                                children: List.generate(
+                                  onboardData.length,
+                                  (index) => dotIndicator(index),
                                 ),
-                                NavButton(
-                                    name: 'Next',
-                                    onPressed: () {
-                                      _pageController.nextPage(
-                                        duration:
-                                            const Duration(microseconds: 400),
-                                        curve: Curves.easeInOut,
-                                      );
-                                    })
-                              ],
-                            ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                              ),
+                              NavButton(
+                                name: 'Next',
+                                onPressed: () {
+                                  _pageController.nextPage(
+                                    duration: const Duration(microseconds: 400),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                              )
+                            ],
+                          ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -168,10 +165,13 @@ class OnboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return Column(
       children: [
-        const Spacer(),
-        SvgPicture.asset(image, height: 300),
+        SvgPicture.asset(
+          image,
+          height: SizeConfig.screenHeight! * 0.6,
+        ),
         // const Spacer(),
         Text(
           title,
@@ -181,7 +181,6 @@ class OnboardContent extends StatelessWidget {
               .headline5!
               .copyWith(fontWeight: FontWeight.w500),
         ),
-        const Spacer(),
         const SizedBox(height: 6.0),
         Text(
           description,
